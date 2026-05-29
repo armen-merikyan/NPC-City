@@ -1,0 +1,20 @@
+{
+  "name": "ethereum-nft-art-downloader",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Download NFT metadata and artwork from Ethereum contracts.",
+  "scripts": {
+    "download": "node src/download-nft-art.js",
+    "download:all": "node src/download-all.js",
+    "remove-bg": "node src/remove-backgrounds.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5",
+    "pngjs": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

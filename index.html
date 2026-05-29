@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NPC City</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="city-shell">
+      <canvas id="city-canvas" tabindex="0" aria-label="NPC City 3D scene"></canvas>
+
+      <header class="hud hud-top">
+        <a class="brand" href="/" aria-label="NPC City home">
+          <span class="brand-mark"></span>
+          <span>NPC CITY</span>
+        </a>
+
+        <nav class="nav-actions" aria-label="Scene actions">
+          <button id="toggle-chat-panel" class="icon-button" type="button" title="Open chat panel" aria-label="Open chat panel">
+            <i data-lucide="message-circle" aria-hidden="true"></i>
+          </button>
+          <button id="shuffle-npcs" class="icon-button" type="button" title="Shuffle citizens" aria-label="Shuffle citizens">
+            <i data-lucide="shuffle" aria-hidden="true"></i>
+          </button>
+          <button id="toggle-motion" class="icon-button" type="button" title="Pause motion" aria-label="Pause motion">
+            <i data-lucide="pause" aria-hidden="true"></i>
+          </button>
+          <button id="toggle-hud-panels" class="icon-button" type="button" title="Minimize panels" aria-label="Minimize panels">
+            <i data-lucide="panel-top-close" aria-hidden="true"></i>
+          </button>
+        </nav>
+      </header>
+
+      <section class="hud scene-status can-minimize" aria-label="City status">
+        <button class="icon-button small panel-minimize" type="button" title="Minimize panel" aria-label="Minimize panel">
+          <i data-lucide="minus" aria-hidden="true"></i>
+        </button>
+        <p class="status-kicker">ON-CHAIN POPULATION</p>
+        <h1>NPC City</h1>
+        <div class="status-grid">
+          <span>
+            <strong>10K</strong>
+            citizens
+          </span>
+          <span>
+            <strong>3D</strong>
+            district
+          </span>
+          <span>
+            <strong>LIVE</strong>
+            viewport
+          </span>
+        </div>
+      </section>
+
+      <section class="hud player-panel can-minimize" aria-label="Player controls">
+        <button class="icon-button small panel-minimize" type="button" title="Minimize panel" aria-label="Minimize panel">
+          <i data-lucide="minus" aria-hidden="true"></i>
+        </button>
+        <div class="field-row">
+          <label for="player-select">Character</label>
+          <select id="player-select"></select>
+        </div>
+        <div class="field-row">
+          <label for="population-size">Citizens Loaded</label>
+          <input id="population-size" type="number" min="0" max="159" step="1" />
+        </div>
+        <div class="mini-readout">
+          <span>Move</span>
+          <strong>WASD / Arrows</strong>
+        </div>
+        <label class="toggle-row compact" for="player-auto-mode">
+          <input id="player-auto-mode" type="checkbox" />
+          <span>Auto talk</span>
+        </label>
+      </section>
+
+      <aside class="hud district-panel can-minimize" aria-label="District data">
+        <button class="icon-button small panel-minimize" type="button" title="Minimize panel" aria-label="Minimize panel">
+          <i data-lucide="minus" aria-hidden="true"></i>
+        </button>
+        <div>
+          <span class="panel-label">District</span>
+          <strong id="district-name">Market Row</strong>
+        </div>
+        <div>
+          <span class="panel-label">Citizens Loaded</span>
+          <strong id="citizen-count">0</strong>
+        </div>
+      </aside>
+
+      <aside id="chat-panel" class="hud chat-panel" aria-label="NPC conversation">
+        <div class="chat-header">
+          <div>
+            <span class="panel-label">Nearby NPC</span>
+            <strong id="nearby-npc">Walk near a citizen</strong>
+            <span id="npc-voice" class="voice-readout">Voice: automatic</span>
+          </div>
+          <button id="close-chat-panel" class="icon-button small" type="button" title="Close chat panel" aria-label="Close chat panel">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="field-row">
+          <label for="openai-key">OpenAI API Key</label>
+          <input id="openai-key" type="password" autocomplete="off" placeholder="sk-..." />
+        </div>
+
+        <div class="field-row">
+          <label for="elevenlabs-key">ElevenLabs API Key</label>
+          <input id="elevenlabs-key" type="password" autocomplete="off" placeholder="sk_..." />
+        </div>
+
+        <label class="toggle-row" for="voice-mode">
+          <input id="voice-mode" type="checkbox" />
+          <span>Voice mode</span>
+        </label>
+
+        <div class="voice-settings">
+          <div class="field-row">
+            <label for="elevenlabs-voice-id">Fallback Voice ID</label>
+            <input id="elevenlabs-voice-id" type="text" autocomplete="off" placeholder="JBFqnCBsd6RMkjVDRZzb" />
+          </div>
+
+          <div class="field-row">
+            <label for="elevenlabs-model-select">Voice Model</label>
+            <select id="elevenlabs-model-select">
+              <option value="eleven_flash_v2_5">eleven_flash_v2_5</option>
+              <option value="eleven_multilingual_v2">eleven_multilingual_v2</option>
+              <option value="eleven_turbo_v2_5">eleven_turbo_v2_5</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label for="voice-variety-select">Voice Variety</label>
+          <select id="voice-variety-select">
+            <option value="varied">Varied</option>
+            <option value="focused">Focused</option>
+            <option value="wild">Wild</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <label for="model-select">Model</label>
+          <select id="model-select">
+            <option value="gpt-5.2">gpt-5.2</option>
+            <option value="gpt-5">gpt-5</option>
+            <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+            <option value="gpt-4.1">gpt-4.1</option>
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <label for="conversation-topic">Conversation Topic</label>
+          <select id="conversation-topic">
+            <option value="mix">Mix from metadata</option>
+            <option value="street">Street banter</option>
+            <option value="roasting">Roasting</option>
+            <option value="arguing">Arguing</option>
+            <option value="politics">Politics</option>
+            <option value="social-media">Social media banter</option>
+            <option value="brain-rot">Brain rot</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <label for="market-topic-select">Live Topic</label>
+          <div class="inline-control">
+            <select id="market-topic-select">
+              <option value="off">Off</option>
+              <option value="random">Random live topic</option>
+            </select>
+            <button id="reset-news-cycle" class="icon-button" type="button" title="Reset news cycle" aria-label="Reset news cycle">
+              <i data-lucide="refresh-cw" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="npc-traits" class="trait-list"></div>
+        <div id="chat-log" class="chat-log" aria-live="polite"></div>
+
+        <form id="chat-form" class="chat-form">
+          <input id="chat-input" type="text" autocomplete="off" placeholder="Say something..." />
+          <button class="icon-button" type="submit" title="Send message" aria-label="Send message">
+            <i data-lucide="send" aria-hidden="true"></i>
+          </button>
+        </form>
+      </aside>
+    </main>
+
+    <script type="module" src="/src/npc-city.js"></script>
+  </body>
+</html>
